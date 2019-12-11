@@ -1,21 +1,22 @@
 //Require .env File//
 require("dotenv").config();
-
 //Links Key Page//
-var keys = require("./keys.js");
+const keys = require("./keys");
 
 //Require File Systems//
 const fs = require('fs');
-
+//moment
+const moment = require('moment');
 // Spotify Initialization//
-var Spotify = require('node-spotify-api')
-var spotify = new Spotify(keys.spotify);
+var Spotify = require('node-spotify-api');
+var spotify = new Spotify(keys.spotifyApi);
+
 
 //OMDB//
-let omdb = (keys.omdb)
+ const omdb = keys.omdbApi;
 
 //bandsintown//
-let bandsInTown = (keys.bandsInTown)
+const bandsInTown = keys.bandsInTownId;
 
 var axios = require('axios');
 
@@ -43,42 +44,38 @@ switch(command){
         break;
     }
 }
-userCommand(command,input);
+// userCommand(command,input);
 
 
 
 ///concert-this
 function concertThis(){
 
-axios.get("https://rest.bandsintown.com/artists/" + input + "/events?app_id=codingbootcamp").then(
+axios.get("https://rest.bandsintown.com/artists/" + input + "/events?app_id=" + bandsInTown).then(
   function(response) {
     console.log(response.data);
-  })
+  });
 }
 
 
 
 ///movie-this
-function movieThis(){
+// function movieThis(){
 
-}
-;//   axios.get("http://www.omdbapi.com/?t=remember+the+titans&y=&plot=short&apikey=trilogy").then(
-//     function(response) {
-//       console.log("The movie's rating is: " + response.data.imdbRating);
-//     })
-  
+// }
+
 
 ///spotify this song
-function spotifyThisSong(){
+// function spotifyThisSong(){
 
 
-}
+// }
 
 
 
 
 ///do what it says
-function doWhatItSays(){
+// function doWhatItSays(){
 
     
-}
+// }
