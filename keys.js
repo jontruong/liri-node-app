@@ -6,7 +6,7 @@ const spotifyApi = {
 
 const apiData = {
   bandsInTownId: process.env.BIT_ID,
-  omdbApi: process.env.OMDB_API
+  // omdbApi: process.env.OMDB_API
 };
 
 module.exports = { spotifyApi, apiData }

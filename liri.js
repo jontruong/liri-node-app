@@ -11,12 +11,10 @@ var Spotify = require('node-spotify-api');
 var spotify = new Spotify(keys.spotifyApi);
 // Require Request//
 const request = require('request');
-//OMDB API//
- const omdb = keys.omdbApi;
+//Require Axios//
+const axios = require('axios');
 //bandsintown API//
 const bandsInTown = keys.bandsInTownId;
-
-
 
 //Take User Command and Input//
 var command = process.argv[2];
@@ -44,8 +42,6 @@ switch(command){
 }
 userCommand(command,input);
 
-
-
 ///concert-this
 function concertThis(){
     request("https://rest.bandsintown.com/artists/" + input + "/events?app_id=" + bandsInTown, function(error,response,body){
@@ -64,24 +60,31 @@ function concertThis(){
     });
 }
 
-
-
 ///movie-this
 function movieThis(){
-request("http://www.omdbapi.com/?t=" + input + "&y=&plot=short&apikey=" + omdb, function(error,response,body){
-
-let userMovie = JSON.parse(body);
-let ratingsArr = userMovie.Ratings;
-if(ratingsArr.length > 2){
-
-}
-if(!error && response.statusCode === 200){
-console.log(``)
-}
-else{
-    console.log("Movie not found")
-}
-})
+    if(!input){
+        input = "Jaws";
+    }
+    var movieQueryUrl= "http://www.omdbapi.com/?t=" + input + "&y=&plot=short&apikey=trilogy"
+        axios.request(movieQueryUrl).then(function(response){
+            console.log("====================");
+            console.log(` Title: ${response.data.Title}\n Year: ${response.data.Year}\n IMDB Rating: ${response.data.imdbRating}\n Rotten Tomatoes Rating: ${response.data.Ratings[1].Value}\n Country: ${response.data.Country}\n Actors: ${response.data.Actors}\n Plot: ${response.data.Plot}\n Language: ${response.data.Language}`);
+        }
+    ).catch(function(error){
+        if(error.response){
+      console.log("---------------Data---------------");
+      console.log(error.response.data);
+      console.log("---------------Status---------------");
+      console.log(error.response.status);
+      console.log("---------------Status---------------");
+      console.log(error.response.headers);
+        } else if(error.request) {
+            console.log(error.request);
+        } else {
+            console.log("Error", error.message)
+        }
+    })
+};
 ///spotify this song
 function spotifyThisSong(){
     if(!input){input = "the sign ace of base"};
@@ -97,8 +100,16 @@ function spotifyThisSong(){
 
 }
 
-///do what it says
-// function doWhatItSays(){
-
-    
-// }
+//Do-what-it-says
+function doWhatItSays(){
+    fs.readFile("random.txt", "utf8", function(error,data){
+        if(error){
+            return console.log(error);
+        }
+            var dataArr = data.split(',');
+            command = dataArr[0];
+            input = dataArr[1];
+            userCommand(command, input);
+        }
+    )
+}
